@@ -34,7 +34,6 @@ static void homing_cycle(bool x_axis, bool y_axis, bool z_axis, bool reverse_dir
   uint32_t step_delay = microseconds_per_pulse - settings.pulse_microseconds;
   uint8_t out_bits = DIRECTION_MASK;
   uint8_t limit_bits;
-  STEPPERS_DISABLE_PORT &= !(1<<STEPPERS_DISABLE_BIT);
   
   if (x_axis) { out_bits |= (1<<X_STEP_BIT); }
   if (y_axis) { out_bits |= (1<<Y_STEP_BIT); }
@@ -76,7 +75,6 @@ static void homing_cycle(bool x_axis, bool y_axis, bool z_axis, bool reverse_dir
     STEPPING_PORT ^= out_bits & STEP_MASK;
     delay_us(step_delay);
   }
-  STEPPERS_DISABLE_PORT |= (1<<STEPPERS_DISABLE_BIT);
   return;
 }
 

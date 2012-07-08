@@ -272,7 +272,7 @@ void st_init()
   STEPPING_DDR |= STEPPING_MASK;
   STEPPING_PORT = (STEPPING_PORT & ~STEPPING_MASK) | settings.invert_mask;
   STEPPERS_DISABLE_DDR |= 1<<STEPPERS_DISABLE_BIT;
-
+  
   // waveform generation = 0100 = CTC
   TCCR1B &= ~(1<<WGM13);
   TCCR1B |=  (1<<WGM12);

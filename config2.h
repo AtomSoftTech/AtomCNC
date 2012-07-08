@@ -18,8 +18,7 @@
   You should have received a copy of the GNU General Public License
   along with Grbl.  If not, see <http://www.gnu.org/licenses/>.
 */
-//Modified for AtomCNC
-//By AtomSoft aka Jason Lopez
+
 #ifndef config_h
 #define config_h
 
@@ -43,15 +42,15 @@
 #define Y_DIRECTION_BIT      5
 #define Z_DIRECTION_BIT      7
 
-#define LIMIT_DDR      DDRB
-#define LIMIT_PIN     PINB
+#define LIMIT_DDR      DDRC
+#define LIMIT_PIN     PINC
 #define X_LIMIT_BIT          1
-#define Y_LIMIT_BIT          4
-#define Z_LIMIT_BIT          5
+#define Y_LIMIT_BIT          0
+#define Z_LIMIT_BIT          2
 
-#define SPINDLE_ENABLE_DDR DDRC
-#define SPINDLE_ENABLE_PORT PORTC
-#define SPINDLE_ENABLE_BIT 0
+#define SPINDLE_ENABLE_DDR DDRB
+#define SPINDLE_ENABLE_PORT PORTB
+#define SPINDLE_ENABLE_BIT 4
 
 #define SPINDLE_DIRECTION_DDR DDRB
 #define SPINDLE_DIRECTION_PORT PORTB

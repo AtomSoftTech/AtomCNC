@@ -1,8 +1,4 @@
-AtomCNC is based on the GRBL Code with slight modifications. 
-
-h1. Original GRBL Text: 
-
-h2. Grbl - An embedded g-code interpreter and motion-controller for the Arduino/AVR328 microcontroller
+h1. Grbl - An embedded g-code interpreter and motion-controller for the Arduino/AVR328 microcontroller
     
 Grbl is a no-compromise, high performance, low cost alternative to parallel-port-based motion control for CNC milling. It will run on a vanilla Arduino (Duemillanove/Uno) as long as it sports an Atmega 328. 
 
