@@ -1,4 +1,7 @@
 h1. AtomCNC - CR1 for Revision 1
+
+h2. Compiling
+
 To Compile modify the MAKEFILE:
 
 *change this to your arduino bin folder*
@@ -8,6 +11,8 @@ ARDBIN = E:\arduino-1.0.1\hardware\tools\avr\bin
 ARDCOM = COM5 
 
 When done compiling you should see a AtomCNC.hex file.
+
+h2. Uploading
 
 To Upload simply run UPLOAD.bat.
 
