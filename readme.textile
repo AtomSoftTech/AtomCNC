@@ -1,3 +1,17 @@
+h1. AtomCNC - CR1 fot Revision 1
+To Compile modify the MAKEFILE:
+
+*change this to your arduino bin folder*
+ARDBIN = E:\arduino-1.0.1\hardware\tools\avr\bin
+
+*change this to match your com port*
+ARDCOM = COM5 
+
+When done compiling you should see a AtomCNC.hex file.
+
+To Upload simply run UPLOAD.bat.
+
+
 h1. Grbl - An embedded g-code interpreter and motion-controller for the Arduino/AVR328 microcontroller
     
 Grbl is a no-compromise, high performance, low cost alternative to parallel-port-based motion control for CNC milling. It will run on a vanilla Arduino (Duemillanove/Uno) as long as it sports an Atmega 328. 
