@@ -1,19 +1,19 @@
-#  Part of Grbl
+#  Part of AtomCNC
 #
 #  Copyright (c) 2009-2011 Simen Svale Skogsrud
 #
-#  Grbl is free software: you can redistribute it and/or modify
+#  AtomCNC is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  Grbl is distributed in the hope that it will be useful,
+#  AtomCNC is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with Grbl.  If not, see <http://www.gnu.org/licenses/>.
+#  along with AtomCNC.  If not, see <http://www.gnu.org/licenses/>.
 
 
 # This is a prototype Makefile. Modify it according to your needs.
@@ -27,9 +27,15 @@
 #                is connected.
 # FUSES ........ Parameters for avrdude to flash the fuses appropriately.
 
+#change this to your arduino bin folder
+ARDBIN = E:\arduino-1.0.1\hardware\tools\avr\bin
+#change this to match your com port
+ARDCOM = COM5 
+
 DEVICE     = atmega328p
 CLOCK      = 16000000
-PROGRAMMER = -c avrisp2 -P usb
+
+PROGRAMMER = -c arduino -P 
 OBJECTS    = main.o motion_control.o gcode.o spindle_control.o serial.o protocol.o stepper.o \
              eeprom.o settings.o planner.o nuts_bolts.o limits.o print.o
 # FUSES      = -U hfuse:w:0xd9:m -U lfuse:w:0x24:m
@@ -39,11 +45,11 @@ FUSES      = -U hfuse:w:0xd2:m -U lfuse:w:0xff:m
 
 # Tune the lines below only if you know what you are doing:
 
-AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE) -B 10 -F 
-COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE) -I. -ffunction-sections
+AVRDUDE = $(ARDBIN)\avrdude $(PROGRAMMER) $(ARDCOM) -p $(DEVICE) -B 10 -F 
+COMPILE = $(ARDBIN)\avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE) -I. -ffunction-sections
 
 # symbolic targets:
-all:	grbl.hex
+all:	AtomCNC.hex
 
 .c.o:
 	$(COMPILE) -c $< -o $@ 
@@ -59,7 +65,7 @@ all:	grbl.hex
 	$(COMPILE) -S $< -o $@
 
 flash:	all
-	$(AVRDUDE) -U flash:w:grbl.hex:i
+	$(AVRDUDE) -U flash:w:AtomCNC.hex:i
 
 fuse:
 	$(AVRDUDE) $(FUSES)
@@ -69,18 +75,18 @@ install: flash fuse
 
 # if you use a bootloader, change the command below appropriately:
 load: all
-	bootloadHID grbl.hex
+	bootloadHID AtomCNC.hex
 
 clean:
-	rm -f grbl.hex main.elf $(OBJECTS)
+	rm -f AtomCNC.hex main.elf $(OBJECTS)
 
 # file targets:
 main.elf: $(OBJECTS)
 	$(COMPILE) -o main.elf $(OBJECTS) -lm -Wl,--gc-sections
 
-grbl.hex: main.elf
-	rm -f grbl.hex
-	avr-objcopy -j .text -j .data -O ihex main.elf grbl.hex
+AtomCNC.hex: main.elf
+	rm -f AtomCNC.hex
+	avr-objcopy -j .text -j .data -O ihex main.elf AtomCNC.hex
 	avr-objdump -h main.elf | grep .bss | ruby -e 'puts "\n\n--- Requires %s bytes of SRAM" % STDIN.read.match(/0[0-9a-f]+\s/)[0].to_i(16)'
 	avr-size *.hex *.elf *.o
 # If you have an EEPROM section, you must also create a hex file for the
