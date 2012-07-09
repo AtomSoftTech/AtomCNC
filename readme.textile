@@ -1,4 +1,4 @@
-h1. AtomCNC - CR1 fot Revision 1
+h1. AtomCNC - CR1 for Revision 1
 To Compile modify the MAKEFILE:
 
 *change this to your arduino bin folder*
