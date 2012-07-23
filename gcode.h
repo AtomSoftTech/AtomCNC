@@ -3,7 +3,8 @@
   Part of Grbl
 
   Copyright (c) 2009-2011 Simen Svale Skogsrud
-
+  Copyright (c) 2011-2012 Sungeun K. Jeon
+  
   Grbl is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -28,5 +29,8 @@ void gc_init();
 
 // Execute one block of rs275/ngc/g-code
 uint8_t gc_execute_line(char *line);
+
+// Set g-code parser position. Input in steps.
+void gc_set_current_position(int32_t x, int32_t y, int32_t z); 
 
 #endif

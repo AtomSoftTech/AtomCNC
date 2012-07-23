@@ -3,7 +3,7 @@
   Part of Grbl
 
   Copyright (c) 2009-2011 Simen Svale Skogsrud
-  Copyright (c) 2011 Sungeun K. Jeon  
+  Copyright (c) 2011-2012 Sungeun K. Jeon  
 
   Grbl is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ typedef struct {
 
   // Fields used by the motion planner to manage acceleration
   double nominal_speed;               // The nominal speed for this block in mm/min  
-  double entry_speed;                 // Entry speed at previous-current junction in mm/min
+  double entry_speed;                 // Entry speed at previous-current block junction in mm/min
   double max_entry_speed;             // Maximum allowable junction entry speed in mm/min
   double millimeters;                 // The total travel of this block in mm
   uint8_t recalculate_flag;           // Planner flag to recalculate trapezoids on entry junction
@@ -66,7 +66,19 @@ void plan_discard_current_block();
 // Gets the current block. Returns NULL if buffer empty
 block_t *plan_get_current_block();
 
-// Reset the position vector
-void plan_set_current_position(double x, double y, double z); 
+// Reset the planner position vector (in steps)
+void plan_set_current_position(int32_t x, int32_t y, int32_t z);
+
+// Reinitialize plan with a partially completed block
+void plan_cycle_reinitialize(int32_t step_events_remaining);
+
+// Reset buffer
+void plan_reset_buffer();
+
+// Returns the status of the block ring buffer. True, if buffer is full.
+uint8_t plan_check_full_buffer();
+
+// Block until all buffered steps are executed
+void plan_synchronize();
 
 #endif

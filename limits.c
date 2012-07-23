@@ -1,5 +1,5 @@
 /*
-  limits.h - code pertaining to limit-switches and performing the homing cycle
+  limits.c - code pertaining to limit-switches and performing the homing cycle
   Part of Grbl
 
   Copyright (c) 2009-2011 Simen Svale Skogsrud
@@ -24,6 +24,11 @@
 #include "settings.h"
 #include "nuts_bolts.h"
 #include "config.h"
+#include "motion_control.h"
+#include "planner.h"
+
+// TODO: Deprecated. Need to update for new version. Sys.position now tracks position relative
+// to the home position. Limits should update this vector directly.
 
 void limits_init() {
   LIMIT_DDR &= ~(LIMIT_MASK);
@@ -34,7 +39,6 @@ static void homing_cycle(bool x_axis, bool y_axis, bool z_axis, bool reverse_dir
   uint32_t step_delay = microseconds_per_pulse - settings.pulse_microseconds;
   uint8_t out_bits = DIRECTION_MASK;
   uint8_t limit_bits;
-  STEPPERS_DISABLE_PORT &= !(1<<STEPPERS_DISABLE_BIT);
   
   if (x_axis) { out_bits |= (1<<X_STEP_BIT); }
   if (y_axis) { out_bits |= (1<<Y_STEP_BIT); }
@@ -76,12 +80,11 @@ static void homing_cycle(bool x_axis, bool y_axis, bool z_axis, bool reverse_dir
     STEPPING_PORT ^= out_bits & STEP_MASK;
     delay_us(step_delay);
   }
-  STEPPERS_DISABLE_PORT |= (1<<STEPPERS_DISABLE_BIT);
   return;
 }
 
 static void approach_limit_switch(bool x, bool y, bool z) {
-  homing_cycle(x, y, z, false, 400);
+  homing_cycle(x, y, z, false, 100000);
 }
 
 static void leave_limit_switch(bool x, bool y, bool z) {
@@ -89,10 +92,10 @@ static void leave_limit_switch(bool x, bool y, bool z) {
 }
 
 void limits_go_home() {
-  st_synchronize();
+  plan_synchronize();
   // Store the current limit switch state
   uint8_t original_limit_state = LIMIT_PIN;
-  //approach_limit_switch(false, false, true); // First home the z axis
+  approach_limit_switch(false, false, true); // First home the z axis
   approach_limit_switch(true, true, false);  // Then home the x and y axis
   // Xor previous and current limit switch state to determine which were high then but have become 
   // low now. These are the actual installed limit switches.

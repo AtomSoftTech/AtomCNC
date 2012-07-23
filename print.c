@@ -3,7 +3,7 @@
   Part of Grbl
 
   Copyright (c) 2009-2011 Simen Svale Skogsrud
-  Copyright (c) 2011 Sungeun K. Jeon
+  Copyright (c) 2011-2012 Sungeun K. Jeon
 
   Grbl is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -25,12 +25,8 @@
 
 #include <math.h>
 #include <avr/pgmspace.h>
+#include "config.h"
 #include "serial.h"
-
-#ifndef DECIMAL_PLACES
-#define DECIMAL_PLACES 3
-#define DECIMAL_MULTIPLIER 1000
-#endif
 
 void printString(const char *s)
 {
@@ -46,38 +42,69 @@ void printPgmString(const char *s)
     serial_write(c);
 }
 
-void printIntegerInBase(unsigned long n, unsigned long base)
+// void printIntegerInBase(unsigned long n, unsigned long base)
+// { 
+// 	unsigned char buf[8 * sizeof(long)]; // Assumes 8-bit chars. 
+// 	unsigned long i = 0;
+// 
+// 	if (n == 0) {
+// 		serial_write('0');
+// 		return;
+// 	} 
+// 
+// 	while (n > 0) {
+// 		buf[i++] = n % base;
+// 		n /= base;
+// 	}
+// 
+// 	for (; i > 0; i--)
+// 		serial_write(buf[i - 1] < 10 ?
+// 			'0' + buf[i - 1] :
+// 			'A' + buf[i - 1] - 10);
+// }
+
+void print_uint8_base2(uint8_t n)
 { 
-	unsigned char buf[8 * sizeof(long)]; // Assumes 8-bit chars. 
-	unsigned long i = 0;
+	unsigned char buf[8];
+	uint8_t i = 0;
 
-	if (n == 0) {
-		serial_write('0');
-		return;
-	} 
-
-	while (n > 0) {
-		buf[i++] = n % base;
-		n /= base;
+	for (; i < 8; i++) {
+		buf[i] = n & 1;
+		n >>= 1;
 	}
 
 	for (; i > 0; i--)
-		serial_write(buf[i - 1] < 10 ?
-			'0' + buf[i - 1] :
-			'A' + buf[i - 1] - 10);
+		serial_write('0' + buf[i - 1]);
+}
+
+static void print_uint32_base10(unsigned long n)
+{ 
+  unsigned char buf[32]; 
+  uint8_t i = 0;
+  
+  if (n == 0) {
+    serial_write('0');
+    return;
+  } 
+  
+  while (n > 0) {
+    buf[i++] = n % 10;
+    n /= 10;
+  }
+  
+  for (; i > 0; i--)
+    serial_write('0' + buf[i - 1]);
 }
 
 void printInteger(long n)
 {
-	if (n < 0) {
-		serial_write('-');
-		n = -n;
-	}
-
-	printIntegerInBase(n, 10);
+  if (n < 0) {
+    serial_write('-');
+    n = -n;
+  }
+  print_uint32_base10(n);
 }
 
-// A very simple 
 void printFloat(double n)
 {
   if (n < 0) {
@@ -88,7 +115,7 @@ void printFloat(double n)
  
   long integer_part;
   integer_part = (int)n;
-  printIntegerInBase(integer_part,10);
+  print_uint32_base10(integer_part);
   
   serial_write('.');
   
