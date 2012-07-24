@@ -27,6 +27,8 @@
 #                is connected.
 # FUSES ........ Parameters for avrdude to flash the fuses appropriately.
 
+AVRTOOL    = E:\arduino-1.0.1\hardware\tools\avr\bin
+
 DEVICE     = atmega328p
 CLOCK      = 16000000
 PROGRAMMER = -c arduino -P COM4
@@ -39,8 +41,8 @@ FUSES      = -U hfuse:w:0xd2:m -U lfuse:w:0xff:m
 
 # Tune the lines below only if you know what you are doing:
 
-AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE) -B 10 -F 
-COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE) -I. -ffunction-sections 
+AVRDUDE = $(AVRTOOL)\avrdude $(PROGRAMMER) -p $(DEVICE) -B 10 -F 
+COMPILE = $(AVRTOOL)\avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE) -I. -ffunction-sections 
 
 # symbolic targets:
 all:	AtomCNC.hex
