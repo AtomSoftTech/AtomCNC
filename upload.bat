@@ -1,2 +1,2 @@
-avrdude -pm328P -carduino -P COM16 -D -Uflash:w:grbl.hex 
+avrdude -pm328P -carduino -P COM5 -D -Uflash:w:AtomCNC.hex
 pause
